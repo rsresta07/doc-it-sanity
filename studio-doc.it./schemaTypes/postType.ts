@@ -23,6 +23,13 @@ export const postType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'topic',
+      title: 'Topic',
+      type: 'reference',
+      to: [{type: 'topic'}],
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: 'image',
       type: 'image',
     }),
