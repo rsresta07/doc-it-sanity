@@ -4,19 +4,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
 import Link from "next/link";
 import { Image } from "next-sanity/image";
-
-const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
-  _id,
-  title,
-  slug,
-  publishedAt,
-  image,
-  body,
-  topic->{
-    title,
-    slug
-  }
-}`;
+import { POST_QUERY } from "@/api/all-api";
 
 const { projectId, dataset } = client.config();
 const urlFor = (source: SanityImageSource) =>
@@ -24,37 +12,48 @@ const urlFor = (source: SanityImageSource) =>
     ? imageUrlBuilder({ projectId, dataset }).image(source)
     : null;
 
-export default async function PostPage({
+export default async function Page({
   params,
 }: {
-  params: { postSlug: string };
+  params: { topicSlug: string; postSlug: string };
 }) {
   const post = await client.fetch<SanityDocument>(POST_QUERY, {
     slug: params.postSlug,
   });
 
+  const topics = await client.fetch<SanityDocument[]>(`
+    *[_type == "topic"]{title, slug}
+  `);
+
   const postImageUrl = post.image
     ? urlFor(post.image)?.width(550).height(310).url()
     : null;
 
+  const currentTopic = topics.find(
+    (topic) => topic.slug.current === params.topicSlug
+  );
+
   return (
-    <main className="container mx-auto min-h-screen max-w-3xl p-8 flex flex-col gap-4">
-      <Link href="/" className="hover:underline">
+    <main className="container mx-auto min-h-screen max-w-3xl flex flex-col gap-4 mt-[5rem]">
+      <Link
+        href={`/topic/${currentTopic?.slug?.current}`}
+        className="hover:underline"
+      >
         ← Back to posts
       </Link>
+      <h1 className="text-4xl font-bold mb-[1rem]">{post.title}</h1>
+
       {postImageUrl && (
         <Image
           src={postImageUrl}
           alt={post.title}
-          className="aspect-video rounded-xl"
-          width="550"
-          height="310"
+          className="aspect-video rounded-xl object-cover"
+          width="1024"
+          height="1024"
         />
       )}
-      <h1 className="text-4xl font-bold mb-8">{post.title}</h1>
       <div className="prose">
         <p>Published: {new Date(post.publishedAt).toLocaleDateString()}</p>
-        {/* {Array.isArray(post.body) && <PortableText value={post.body} />} */}
         {Array.isArray(post.body) && (
           <PortableText
             value={post.body}
