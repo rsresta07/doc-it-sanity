@@ -4,7 +4,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
 import Link from "next/link";
 import { Image } from "next-sanity/image";
-import { POST_QUERY } from "@/api/all-api";
+import { POST_QUERY } from "@/app/api/all-api";
 import CommentForm from "@/components/CommentForm";
 import CommentsSection from "@/components/CommentsSection";
 

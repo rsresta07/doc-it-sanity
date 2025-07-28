@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { client } from "@/sanity/client";
 import { SanityDocument } from "next-sanity";
-import { POSTS_BY_TOPIC_QUERY, topics } from "@/api/all-api";
+import { POSTS_BY_TOPIC_QUERY, topics } from "@/app/api/all-api";
 import imageUrlBuilder from "@sanity/image-url";
 import { Image } from "next-sanity/image";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";

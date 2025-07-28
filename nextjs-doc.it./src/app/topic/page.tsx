@@ -1,4 +1,4 @@
-import { topics } from "@/api/all-api";
+import { topics } from "@/app/api/all-api";
 import Link from "next/link";
 
 /**
