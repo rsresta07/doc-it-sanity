@@ -5,7 +5,9 @@ import { SanityDocument } from "next-sanity";
  * fetch topics with title and their slug
  */
 export const topics = await client.fetch<SanityDocument[]>(`
-  *[_type == "topic"]{title, slug}
+  *[_type == "topic"] 
+  | order(title asc)
+  {title, slug}
 `);
 
 /**
@@ -40,4 +42,3 @@ export const POST_QUERY = `*[_type == "post" && slug.current == $slug][0]{
     slug
   }
 }`;
-
