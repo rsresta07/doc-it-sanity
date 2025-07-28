@@ -41,6 +41,19 @@ export default async function TopicPage({
   );
   return (
     <main className="container mx-auto min-h-screen max-w-3xl mt-[5rem]">
+      <section className="text-sm mb-4 text-gray-600 flex flex-wrap items-center gap-1">
+        <Link href="/" className="hover:underline text-blue-600">
+          Home
+        </Link>
+        <span>/</span>
+        <Link
+          href={`/topic/${currentTopic?.slug.current}`}
+          className="text-gray-800 font-medium"
+        >
+          {currentTopic?.title}
+        </Link>
+      </section>
+
       <h1 className="text-3xl font-bold mb-6">
         Posts in {currentTopic?.title ?? params.topicSlug}
       </h1>
@@ -56,14 +69,25 @@ export default async function TopicPage({
                   <Image
                     src={urlFor(post.image).width(400).height(250).url()}
                     alt={post.title}
-                    className="rounded-xl object-cover w-[4rem] h-[4rem]"
+                    className="rounded-xl object-cover w-[5rem] h-[5rem]"
                     width={1024}
                     height={1024}
                   />
                 )}
                 <div>
                   <h3 className="text-xl font-semibold">{post.title}</h3>
-                  <p>{new Date(post.publishedAt).toLocaleDateString()}</p>
+                  <div>
+                    <p>
+                      Posted Date:{" "}
+                      {new Date(post?._createdAt).toLocaleDateString()}
+                    </p>
+                    {post?._updatedAt && (
+                      <p>
+                        Last updated:{" "}
+                        {new Date(post?._updatedAt).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </Link>

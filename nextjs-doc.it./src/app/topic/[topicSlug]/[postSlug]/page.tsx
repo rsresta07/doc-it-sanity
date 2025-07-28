@@ -5,6 +5,8 @@ import { client } from "@/sanity/client";
 import Link from "next/link";
 import { Image } from "next-sanity/image";
 import { POST_QUERY } from "@/api/all-api";
+import CommentForm from "@/components/CommentForm";
+import CommentsSection from "@/components/CommentsSection";
 
 const { projectId, dataset } = client.config();
 
@@ -57,14 +59,44 @@ export default async function Page({
 
   return (
     <main className="container mx-auto min-h-screen max-w-3xl flex flex-col gap-4 mt-[5rem]">
+      {/* BreadCrumbs */}
+      <section className="text-sm mb-4 text-gray-600 flex flex-wrap items-center gap-1">
+        <Link href="/" className="hover:underline text-blue-600">
+          Home
+        </Link>
+        <span>/</span>
+        <Link
+          href={`/topic/${post.topic.slug.current}`}
+          className="hover:underline text-blue-600"
+        >
+          {post.topic.title}
+        </Link>
+        <span>/</span>
+        <span className="text-gray-800 font-medium">{post.title}</span>
+      </section>
+
+      {/* Go back link */}
       <Link
         href={`/topic/${currentTopic?.slug?.current}`}
         className="hover:underline"
       >
         ← Back to posts
       </Link>
-      <h1 className="text-4xl font-bold mb-[1rem]">{post.title}</h1>
 
+      {/* title */}
+      <section className="flex justify-between items-center">
+        <h1 className="text-4xl font-bold mb-[1rem]">{post.title}</h1>
+        <div>
+          <p className="text-sm text-right">
+            Published Date: {new Date(post?._createdAt).toLocaleDateString()}
+          </p>
+          <p className="text-sm text-right">
+            Updated Date: {new Date(post?._updatedAt).toLocaleDateString()}
+          </p>
+        </div>
+      </section>
+
+      {/* Image */}
       {postImageUrl && (
         <Image
           src={postImageUrl}
@@ -74,8 +106,9 @@ export default async function Page({
           height="1024"
         />
       )}
-      <div className="prose">
-        <p>Published: {new Date(post.publishedAt).toLocaleDateString()}</p>
+
+      {/* Content */}
+      <section className="prose">
         {Array.isArray(post.body) && (
           <PortableText
             value={post.body}
@@ -118,7 +151,12 @@ export default async function Page({
             }}
           />
         )}
-      </div>
+      </section>
+
+      {/* Comment section */}
+      <section className="mt-[10rem]">
+        <CommentsSection postId={post._id} />
+      </section>
     </main>
   );
 }
