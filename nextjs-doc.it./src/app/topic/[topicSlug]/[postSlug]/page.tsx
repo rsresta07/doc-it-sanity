@@ -7,11 +7,33 @@ import { Image } from "next-sanity/image";
 import { POST_QUERY } from "@/api/all-api";
 
 const { projectId, dataset } = client.config();
+
+/**
+ * Given a SanityImageSource, returns a URL for the image.
+ * @param source The source object for the image.
+ * @returns A URL for the image, or null if the Sanity client is not configured.
+ */
 const urlFor = (source: SanityImageSource) =>
   projectId && dataset
     ? imageUrlBuilder({ projectId, dataset }).image(source)
     : null;
 
+/**
+ * A page that displays a single post.
+ *
+ * @param {Object} props - The properties object.
+ * @param {Object} props.params - The parameters object.
+ * @param {string} props.params.topicSlug - The slug of the topic to fetch posts for.
+ * @param {string} props.params.postSlug - The slug of the post to fetch.
+ * Fetches the post from the Sanity client using the provided topic slug and post slug.
+ * Renders a post with its title, image, published date, and body content.
+ * The post body content is rendered using the `PortableText` component from `next-sanity`.
+ * The post body content is rendered with a custom configuration for the `PortableText` component.
+ * The custom configuration specifies the components to use for each block type.
+ * The custom configuration specifies the components to use for each mark type.
+ * The custom configuration specifies the components to use for each list item type.
+ * @returns A React component that displays a post.
+ */
 export default async function Page({
   params,
 }: {

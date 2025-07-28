@@ -1,3 +1,11 @@
+/**
+ * A common navigation bar component, used across all pages.
+ *
+ * This component renders a horizontal navigation bar with a
+ * "Next.js" title on the left and no links on the right.
+ *
+ * @returns A React component that renders a navigation bar.
+ */
 const CommonNavBar = () => {
   return (
     <nav className="flex items-center justify-between flex-wrap bg-gray-800 p-6">

@@ -1,4 +1,3 @@
-// app/topics/[topicSlug]/page.tsx
 import Link from "next/link";
 import { client } from "@/sanity/client";
 import { SanityDocument } from "next-sanity";
@@ -10,11 +9,24 @@ import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 // create builder
 const builder = imageUrlBuilder(client);
 
-// utility to build image url
+/**
+ * Given a SanityImageSource, returns a URL for the image.
+ * @param source The source object for the image.
+ * @returns A URL for the image.
+ */
 function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
+/**
+ * A page that displays a list of posts for a given topic.
+ *
+ * @param {Object} props - The properties object.
+ * @param {Object} props.params - The parameters object.
+ * @param {string} props.params.topicSlug - The slug of the topic to fetch posts for.
+ * @returns A React component that displays posts for the specified topic.
+ * Fetches posts from the Sanity client using the provided topic slug.
+ */
 export default async function TopicPage({
   params,
 }: {

@@ -1,6 +1,11 @@
 import { topics } from "@/api/all-api";
 import Link from "next/link";
 
+/**
+ * A page that displays a list of topics.
+ *
+ * @returns A React component that displays a list of topics.
+ */
 export default async function TopicPage() {
   return (
     <main className="container mx-auto min-h-screen max-w-3xl  mt-[5rem]">
