@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { client } from "@/sanity/client";
 import { SanityDocument } from "next-sanity";
-import { POSTS_BY_TOPIC_QUERY, topics } from "@/app/api/all-api";
+import { POSTS_BY_TOPIC_QUERY } from "@/app/api/all-api";
 import imageUrlBuilder from "@sanity/image-url";
 import { Image } from "next-sanity/image";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
@@ -36,11 +36,20 @@ export default async function TopicPage({
     slug: params.topicSlug,
   });
 
+  const topics = await client.fetch<SanityDocument[]>(`
+    *[_type == "topic" && !(_id in path("drafts.**")) && count(*[_type == "post" && references(^._id)]) > 0]
+    | order(title asc){
+      title,
+      slug
+    }
+  `);
+
   const currentTopic = await topics.find(
     (topic) => topic?.slug?.current === params?.topicSlug
   );
   return (
-    <main className="container mx-auto min-h-screen max-w-3xl mt-[5rem]">
+    <main className="container mx-auto min-h-screen pt-[5rem] max-w-6xl">
+      {/* Breadcrumb */}
       <section className="text-sm mb-4 text-gray-600 flex flex-wrap items-center gap-1">
         <Link href="/" className="hover:underline text-blue-600">
           Home
@@ -54,16 +63,17 @@ export default async function TopicPage({
         </Link>
       </section>
 
-      <h1 className="text-3xl font-bold mb-6">
+      <h1 className="text-3xl font-bold mb-[2rem]">
         Posts in {currentTopic?.title ?? params.topicSlug}
       </h1>
-      <ul className="space-y-4">
+      <section className="flex flex-wrap gap-[1rem]">
         {posts.map((post) => (
-          <li className="transform transition hover:scale-103" key={post._id}>
-            <Link
-              href={`/topic/${post?.topic?.slug?.current}/${post?.slug?.current}`}
-              className="flex justify-between items-center gap-4"
-            >
+          <Link
+            href={`/topic/${post?.topic?.slug?.current}/${post?.slug?.current}`}
+            className="flex justify-between items-center gap-4"
+            key={post._id}
+          >
+            <div className="border rounded-2xl p-[1rem] transform transition hover:scale-103">
               <div className="flex gap-6 items-center">
                 {post.image && (
                   <Image
@@ -90,10 +100,10 @@ export default async function TopicPage({
                   </div>
                 </div>
               </div>
-            </Link>
-          </li>
+            </div>
+          </Link>
         ))}
-      </ul>
+      </section>
     </main>
   );
 }

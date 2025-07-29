@@ -2,12 +2,15 @@ import { client } from "@/sanity/client";
 import { SanityDocument } from "next-sanity";
 
 /**
- * fetch topics with title and their slug
+ * fetch topics with title and their slug that has at least one post
  */
 export const topics = await client.fetch<SanityDocument[]>(`
-  *[_type == "topic"] 
+  *[_type == "topic" && !(_id in path("drafts.**")) && count(*[_type == "post" && references(^._id)]) > 0]
   | order(title asc)
-  {title, slug}
+  {
+    title,
+    slug
+  }
 `);
 
 /**
@@ -15,7 +18,7 @@ export const topics = await client.fetch<SanityDocument[]>(`
  */
 export const POSTS_BY_TOPIC_QUERY = `
   *[_type == "post" && topic->slug.current == $slug]
-  | order(publishedAt desc){
+  | order(title asc){
     _id,
     _createdAt,
     _updatedAt,

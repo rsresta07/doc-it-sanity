@@ -5,7 +5,6 @@ import { client } from "@/sanity/client";
 import Link from "next/link";
 import { Image } from "next-sanity/image";
 import { POST_QUERY } from "@/app/api/all-api";
-import CommentForm from "@/components/CommentForm";
 import CommentsSection from "@/components/CommentsSection";
 
 const { projectId, dataset } = client.config();
@@ -58,7 +57,7 @@ export default async function Page({
   );
 
   return (
-    <main className="container mx-auto min-h-screen max-w-3xl flex flex-col gap-4 mt-[5rem]">
+    <main className="container mx-auto min-h-screen max-w-6xl flex flex-col gap-4 pt-[5rem]">
       {/* BreadCrumbs */}
       <section className="text-sm mb-4 text-gray-600 flex flex-wrap items-center gap-1">
         <Link href="/" className="hover:underline text-blue-600">
@@ -101,7 +100,7 @@ export default async function Page({
         <Image
           src={postImageUrl}
           alt={post.title}
-          className="aspect-video rounded-xl object-cover"
+          className="aspect-video rounded-xl object-cover w-full"
           width="1024"
           height="1024"
         />
@@ -154,9 +153,7 @@ export default async function Page({
       </section>
 
       {/* Comment section */}
-      <section className="mt-[10rem]">
-        <CommentsSection postId={post._id} />
-      </section>
+      <CommentsSection postId={post._id} />
     </main>
   );
 }
